@@ -1,5 +1,5 @@
 Conhecimentos adquiridos durante o projeto:
 
-1-Manipulação de contexto de registradores; 2-Engenharia Reversa para descobrir os endereços estáticos de memória que são usados na aplicação; 3-Ponteiros e offsets; 4-Um pouco de orientação a dados;
+1-Registradores e contexto deles; 2-Um pouco de engenharia reversa para encontrar os enderecos de memoria que precisava para o objetivo da aplicacao; 3-Um pouco mais de como funciona a memoria, ponteiros, offsets...; 4-Um pouco de C#;
 
 OBS: Tive ajuda de IA durante o processo de aprendizado e com ajuda na parte de programação em C#.
