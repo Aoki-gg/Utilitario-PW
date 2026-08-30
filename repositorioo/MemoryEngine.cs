@@ -10,7 +10,6 @@ namespace repositorioo
 {
     public class MemoryEngine
     {
-        // --- Importações das APIs do Sistema ---
         [DllImport("user32.dll")] public static extern short GetAsyncKeyState(int vKey);
         [DllImport("kernel32.dll")] public static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, uint dwSize, uint flAllocationType, uint flProtect);
         [DllImport("kernel32.dll")] public static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, uint nSize, out IntPtr lpNumberOfBytesWritten);
@@ -88,7 +87,6 @@ namespace repositorioo
             _verificacaoAtiva = false;
         }
 
-        // CORRIGIDO: Agora aceita ulong para bater com o Form1 e usa as variáveis corretas do argumento
         public void ProcessarTrocaDeSet(ulong defElmo, ulong defCapa, ulong defOrn, ulong atkElmo, ulong atkCapa, ulong atkOrn)
         {
             if (HProcess == IntPtr.Zero) return;
@@ -103,7 +101,6 @@ namespace repositorioo
             capaAtual = ReadInt32(ptr2 + 0x2C);
             ornAtual = ReadInt32(ptr2 + 0x34);
 
-            // CORRIGIDO: Comparação direta usando os nomes certos das variáveis da assinatura do método
             if ((ulong)elmoAtual == defElmo && (ulong)capaAtual == defCapa && (ulong)ornAtual == defOrn)
             {
                 TrocarSetCompleto(atkOrn, atkElmo, atkCapa);
@@ -126,19 +123,19 @@ namespace repositorioo
             {
                 0x48, 0x83, 0xEC, 0x28,                                     
                 
-                // --- ITEM 1: Ornamento (Slot 0x5) ---
+                // Ornamento 0x05
                 0x48, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x48, 0xBA, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0xFF, 0xD0,                                                 
                 
-                // --- ITEM 2: Elmo (Slot 0x1) ---
+                // Elmo 0x01
                 0x48, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x48, 0xBA, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0xFF, 0xD0,                                                 
                 
-                // --- ITEM 3: Capa (Slot 0x3) ---
+                // Capa 0x03
                 0x48, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x48, 0xBA, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -172,7 +169,7 @@ namespace repositorioo
             }
         }
 
-        public void teste2(ulong rcx,ulong rdx, ulong r8, ulong r9)
+        public void teste2(ulong rcx, ulong rdx, ulong r8, ulong r9)
         {
             byte[] shellcode = new byte[]
             {
@@ -186,7 +183,7 @@ namespace repositorioo
                 0x48, 0x83, 0xC4, 0x20,
                 0xC3
             };
-            
+
             Buffer.BlockCopy(BitConverter.GetBytes((ulong)rcx), 0, shellcode, 6, 8);
             Buffer.BlockCopy(BitConverter.GetBytes((ulong)rdx), 0, shellcode, 16, 8);
             Buffer.BlockCopy(BitConverter.GetBytes((ulong)r8), 0, shellcode, 26, 8);

@@ -41,7 +41,6 @@ namespace repositorioo
                 if (System.IO.File.Exists(caminhoIcone)) this.Icon = new System.Drawing.Icon(caminhoIcone);
                 else this.Icon = new System.Drawing.Icon("faviicon.ico");
 
-                // Se for a primeira vez abrindo, ele vai usar os valores padrões que você definiu na tabela
                 txtTeclaAtalho.Text = Properties.Settings.Default.TeclaAtalho;
 
                 txtAtkElmo.Text = Properties.Settings.Default.AtkElmo;
@@ -52,10 +51,9 @@ namespace repositorioo
                 txtDefCapa.Text = Properties.Settings.Default.DefCapa;
                 txtDefOrn.Text = Properties.Settings.Default.DefOrn;
 
-                // Processa a conversão inicial dos IDs para a macro funcionar de imediato
+
                 AtualizarTroca(null, null);
 
-                // Processa a conversão inicial dos IDs para a macro funcionar de imediato
                 AtualizarTroca(null, null);
             }
             catch (Exception ex) { System.Diagnostics.Debug.WriteLine("Erro ao carregar o ícone: " + ex.Message); }
@@ -86,7 +84,7 @@ namespace repositorioo
             txtDefOrn = new TextBox() { Text = "", Top = 165, Left = 105, Width = 40 };
 
             Label lblAtalho = new Label() { Text = "ATALHO:", Top = 200, Left = 50, Width = 55, Font = new System.Drawing.Font(this.Font, System.Drawing.FontStyle.Bold) };
-            txtTeclaAtalho = new TextBox() { Text = "", Top = 225, Left = 62, Width = 25};
+            txtTeclaAtalho = new TextBox() { Text = "", Top = 225, Left = 62, Width = 25 };
 
             btnConectar = new Button() { Text = "Conectar", Top = 260, Left = 8, Width = 135, Height = 30 };
             btnConectar.Click += BtnConectar_Click;
@@ -109,7 +107,6 @@ namespace repositorioo
                 lblAtalho, txtTeclaAtalho, btnConectar, lblStatus, btnAtualizarItems, btnAtualizarTroca,BtnTestar,
             });
 
-            // Força a leitura inicial dos IDs ao abrir o programa baseado nas caixas padrões
             AtualizarTroca(null, null);
         }
 
@@ -128,15 +125,15 @@ namespace repositorioo
             catch { }
         }
 
-        private void Azure() { } // Método fantasma removido implicitamente
+        private void Azure() { }
 
-        private void Hex() { } // Método fantasma removido implicitamente
+        private void Hex() { }
 
         private void AtualizarTroca(object sender, EventArgs e)
         {
             try
             {
-                // Salva as variáveis numéricas ulong na memória ram do app
+ 
                 DefElmoInt = Convert.ToUInt32(txtDefElmo.Text, 16);
                 DefCapaInt = Convert.ToUInt32(txtDefCapa.Text, 16);
                 DefOrnInt = Convert.ToUInt32(txtDefOrn.Text, 16);
@@ -145,7 +142,7 @@ namespace repositorioo
                 AtkCapaInt = Convert.ToUInt32(txtAtkCapa.Text, 16);
                 AtkOrnInt = Convert.ToUInt32(txtAtkOrn.Text, 16);
 
-                // --- GRAVAR OS TEXTOS DIRETOS NAS CONFIGURAÇÕES NATIVAS ---
+
                 Properties.Settings.Default.TeclaAtalho = txtTeclaAtalho.Text;
 
                 Properties.Settings.Default.AtkElmo = txtAtkElmo.Text;
@@ -156,12 +153,12 @@ namespace repositorioo
                 Properties.Settings.Default.DefCapa = txtDefCapa.Text;
                 Properties.Settings.Default.DefOrn = txtDefOrn.Text;
 
-                // Commita as alterações fisicamente no arquivo do computador
+
                 Properties.Settings.Default.Save();
 
                 if (sender != null)
                 {
-                    MessageBox.Show("Salvo","", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Salvo", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch
@@ -196,7 +193,7 @@ namespace repositorioo
         private void BtnTestarFuncao_Click(object sender, EventArgs e)
         {
             if (engine.HProcess == IntPtr.Zero) return;
-            try { engine.teste2(0xB0B0E9C0,0x2F537F80,0x180468EE0,0x28807CB0); } catch { }
+            try { engine.teste2(0xB0B0E9C0, 0x2F537F80, 0x180468EE0, 0x28807CB0); } catch { }
         }
 
         private void InitializeComponent() { }
