@@ -25,12 +25,14 @@ namespace repositorioo
         public IntPtr FunctionSwap { get; private set; } = IntPtr.Zero;
         public IntPtr FunctionSwap2 { get; private set; } = IntPtr.Zero;
         public IntPtr SkillCall { get; private set; } = IntPtr.Zero;
+        public int elmoAtual { get; private set; } = 0;
+        public int capaAtual { get; private set; } = 0;
+        public int ornAtual { get; private set; } = 0;
 
         private CancellationTokenSource? _cts;
         private bool _verificacaoAtiva = false;
 
-        public bool Conectar()
-        {
+        public bool Conectar() {
             Process[] processes = Process.GetProcessesByName("elementclient_64");
             if (processes.Length == 0) return false;
 
@@ -39,24 +41,13 @@ namespace repositorioo
 
             if (HProcess == IntPtr.Zero) return false;
 
+
             BaseAddress = gameProcess.MainModule.BaseAddress;
             FunctionSwap = IntPtr.Add(BaseAddress, 0xA7F8D0);
             FunctionSwap2 = IntPtr.Add(BaseAddress, 0xA6FF10);
             SkillCall = IntPtr.Add(BaseAddress, 0x8E6FB0);
-            return true;
-        }
 
-        public int elmoAtual { get; private set; } = 0;
-        public int capaAtual { get; private set; } = 0;
-        public int ornAtual { get; private set; } = 0;
-
-
-        public void RelerItensAtuais()
-        {
-            if (HProcess == IntPtr.Zero) return;
-
-            try
-            {
+            try {
                 IntPtr ptr1 = (IntPtr)ReadInt64(BaseAddress + 0x01733D70);
                 if (ptr1 == IntPtr.Zero) return;
 
@@ -69,15 +60,33 @@ namespace repositorioo
                 IntPtr ptrBolsa = (IntPtr)ReadInt64(BaseBolsa + 0x60);
                 if (ptrBolsa == IntPtr.Zero) return;
 
-                elmoAtual = ReadInt32(ptr2 + 0x24);
-                capaAtual = ReadInt32(ptr2 + 0x2C);
-                ornAtual = ReadInt32(ptr2 + 0x34);
             }
-            catch
-            {
+            catch {
                 elmoAtual = 0;
                 capaAtual = 0;
                 ornAtual = 0;
+
+            }
+
+            return true;
+            }
+    }
+
+        public void RelerItensAtuais()
+        {
+            if (HProcess == IntPtr.Zero) return;
+
+            try {
+                elmoAtual = ReadInt32(ptr2 + 0x24);
+                capaAtual = ReadInt32(ptr2 + 0x2C);
+                ornAtual = ReadInt32(ptr2 + 0x34);
+
+            }
+            catch {
+                elmoAtual = 0;
+                capaAtual = 0;
+                ornAtual = 0;
+
             }
         }
 
@@ -90,12 +99,6 @@ namespace repositorioo
         public void ProcessarTrocaDeSet(ulong defElmo, ulong defCapa, ulong defOrn, ulong atkElmo, ulong atkCapa, ulong atkOrn)
         {
             if (HProcess == IntPtr.Zero) return;
-
-            IntPtr ptr1 = (IntPtr)ReadInt64(BaseAddress + 0x01733D70);
-            if (ptr1 == IntPtr.Zero) return;
-
-            IntPtr ptr2 = (IntPtr)ReadInt64(ptr1 + 0x10);
-            if (ptr2 == IntPtr.Zero) return;
 
             elmoAtual = ReadInt32(ptr2 + 0x24);
             capaAtual = ReadInt32(ptr2 + 0x2C);
@@ -169,36 +172,36 @@ namespace repositorioo
             }
         }
 
-        public void teste2(ulong rcx, ulong rdx, ulong r8, ulong r9)
-        {
-            byte[] shellcode = new byte[]
-            {
-                0x48, 0x83, 0xEC, 0x20, //[0-3] SUB RSP, 20h
-                0x48, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, //[4-13] mov RCX
-                0x48, 0xBA, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, //[14-23] mov RDX
-                0x49, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, //[24-33] mov R8
-                0x49, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, //[34-43] mov R9
-                0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, //[44-53] mov rax
-                0xFF, 0xD0,
-                0x48, 0x83, 0xC4, 0x20,
-                0xC3
-            };
+        // public void teste2(ulong rcx, ulong rdx, ulong r8, ulong r9)
+        // {
+        //     byte[] shellcode = new byte[]
+        //     {
+        //         0x48, 0x83, 0xEC, 0x20, //[0-3] SUB RSP, 20h
+        //         0x48, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, //[4-13] mov RCX
+        //         0x48, 0xBA, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, //[14-23] mov RDX
+        //         0x49, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, //[24-33] mov R8
+        //         0x49, 0xB9, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, //[34-43] mov R9
+        //         0x48, 0xB8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, //[44-53] mov rax
+        //         0xFF, 0xD0,
+        //         0x48, 0x83, 0xC4, 0x20,
+        //         0xC3
+        //     };
 
-            Buffer.BlockCopy(BitConverter.GetBytes((ulong)rcx), 0, shellcode, 6, 8);
-            Buffer.BlockCopy(BitConverter.GetBytes((ulong)rdx), 0, shellcode, 16, 8);
-            Buffer.BlockCopy(BitConverter.GetBytes((ulong)r8), 0, shellcode, 26, 8);
-            Buffer.BlockCopy(BitConverter.GetBytes((ulong)r9), 0, shellcode, 36, 8);
-            Buffer.BlockCopy(BitConverter.GetBytes((ulong)SkillCall), 0, shellcode, 46, 8);
+        //     Buffer.BlockCopy(BitConverter.GetBytes((ulong)rcx), 0, shellcode, 6, 8);
+        //     Buffer.BlockCopy(BitConverter.GetBytes((ulong)rdx), 0, shellcode, 16, 8);
+        //     Buffer.BlockCopy(BitConverter.GetBytes((ulong)r8), 0, shellcode, 26, 8);
+        //     Buffer.BlockCopy(BitConverter.GetBytes((ulong)r9), 0, shellcode, 36, 8);
+        //     Buffer.BlockCopy(BitConverter.GetBytes((ulong)SkillCall), 0, shellcode, 46, 8);
 
 
-            IntPtr allocMem = VirtualAllocEx(HProcess, IntPtr.Zero, (uint)shellcode.Length, 0x1000 | 0x2000, 0x40);
-            WriteProcessMemory(HProcess, allocMem, shellcode, (uint)shellcode.Length, out _);
+        //     IntPtr allocMem = VirtualAllocEx(HProcess, IntPtr.Zero, (uint)shellcode.Length, 0x1000 | 0x2000, 0x40);
+        //     WriteProcessMemory(HProcess, allocMem, shellcode, (uint)shellcode.Length, out _);
 
-            IntPtr hThread = CreateRemoteThread(HProcess, IntPtr.Zero, 0, allocMem, IntPtr.Zero, 0, IntPtr.Zero);
-            WaitForSingleObject(hThread, 0xFFFFFFFF);
-            CloseHandle(hThread);
-            VirtualFreeEx(HProcess, allocMem, 0, 0x8000);
-        }
+        //     IntPtr hThread = CreateRemoteThread(HProcess, IntPtr.Zero, 0, allocMem, IntPtr.Zero, 0, IntPtr.Zero);
+        //     WaitForSingleObject(hThread, 0xFFFFFFFF);
+        //     CloseHandle(hThread);
+        //     VirtualFreeEx(HProcess, allocMem, 0, 0x8000);
+        // }
 
         public int ReadInt32(IntPtr address)
         {
